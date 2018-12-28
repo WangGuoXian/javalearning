@@ -1,6 +1,8 @@
 package com.tydic.wangguoxian.javalearning.netty.http;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
+import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedNioFile;
@@ -64,15 +66,18 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
                 response.headers().set( HttpHeaders.Names.CONNECTION,
                     HttpHeaders.Values.KEEP_ALIVE);
             }
+            System.out.println(request.headers().);
+//            response.setDecoderResult(request.decoderResult());
             //(3) 将 HttpResponse 写到客户端
             ctx.write(response);
             //(4) 将 index.html 写到客户端
-            if (ctx.pipeline().get(SslHandler.class) == null) {
+            /*if (ctx.pipeline().get(SslHandler.class) == null) {
                 ctx.write(new DefaultFileRegion(
                     file.getChannel(), 0, file.length()));
             } else {
                 ctx.write(new ChunkedNioFile(file.getChannel()));
-            }
+            }*/
+
             //(5) 写 LastHttpContent 并冲刷至客户端
             ChannelFuture future = ctx.writeAndFlush(
                 LastHttpContent.EMPTY_LAST_CONTENT);

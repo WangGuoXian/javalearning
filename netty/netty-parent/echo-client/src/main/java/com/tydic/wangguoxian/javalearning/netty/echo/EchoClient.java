@@ -1,6 +1,7 @@
 package com.tydic.wangguoxian.javalearning.netty.echo;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -32,7 +33,10 @@ public class EchoClient {
                             socketChannel.pipeline().addLast(new EchoClientHandler());
                         }
                     });
+            ChannelFuture f = b.connect().sync();
+            f.channel().closeFuture().sync();
         }finally {
+            group.shutdownGracefully().sync();
 
         }
     }
@@ -44,6 +48,7 @@ public class EchoClient {
         }
         String host = args[0];
         int port = Integer.parseInt(args[1]);
+        System.out.println("Client Starting...:host:"+host+",port:"+port);
         new EchoClient(host,port).start();
     }
 

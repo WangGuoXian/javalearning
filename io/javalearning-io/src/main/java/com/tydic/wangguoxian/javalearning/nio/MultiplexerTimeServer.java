@@ -89,8 +89,13 @@ public class MultiplexerTimeServer implements Runnable {
                 SocketChannel sc = (SocketChannel)key.channel();
                 ByteBuffer readBuffer = ByteBuffer.allocate(1024);
                 int readBytes = sc.read(readBuffer);
-                readBuffer.flip();
-                byte[] bytes = new byte[readBuffer.]
+                if (readBytes > 0){
+                    readBuffer.flip();
+                    byte[] bytes = new byte[readBuffer.remaining()];
+                    readBuffer.get(bytes);
+
+                }
+
 
             }
         }
